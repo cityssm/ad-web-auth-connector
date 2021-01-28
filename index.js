@@ -50,9 +50,9 @@ const authenticate = (userName, passwordPlain, adWebAuthConfig) => __awaiter(voi
                 break;
         }
         adFetch
-            .then((res) => {
-            return res.json();
-        })
+            .then((res) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield res.json();
+        }))
             .then((auth) => {
             resolve(auth);
         })

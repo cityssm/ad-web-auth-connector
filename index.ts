@@ -58,8 +58,8 @@ export const authenticate = async (userName: string, passwordPlain: string, adWe
     }
 
     adFetch
-      .then((res) => {
-        return res.json();
+      .then(async (res) => {
+        return await res.json();
       })
       .then((auth: boolean) => {
         resolve(auth);
