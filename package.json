@@ -1,7 +1,7 @@
 {
-  "name": "ad-web-auth-connector",
+  "name": "@cityssm/ad-web-auth-connector",
   "version": "0.1.0",
-  "description": "",
+  "description": "A connector to assist with authenticating with a cityssm/ad-web-auth instance.",
   "main": "index.js",
   "scripts": {
     "test": "node test/test.js"
