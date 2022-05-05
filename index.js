@@ -1,22 +1,9 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticate = exports.setConfig = void 0;
-const node_fetch_1 = require("node-fetch");
-let config = null;
-const setConfig = (adWebAuthConfig) => {
+import fetch from "node-fetch";
+let config;
+export const setConfig = (adWebAuthConfig) => {
     config = adWebAuthConfig;
 };
-exports.setConfig = setConfig;
-const authenticate = (userName, passwordPlain, adWebAuthConfig) => __awaiter(void 0, void 0, void 0, function* () {
+export const authenticate = async (userName, passwordPlain, adWebAuthConfig) => {
     const promise = new Promise((resolve, reject) => {
         const methodConfig = adWebAuthConfig || config;
         let authURL = methodConfig.url;
@@ -26,21 +13,21 @@ const authenticate = (userName, passwordPlain, adWebAuthConfig) => __awaiter(voi
         let adFetch;
         switch (methodConfig.method) {
             case "get":
-                adFetch = node_fetch_1.default(authURL + "/byGet?" +
+                adFetch = fetch(authURL + "/byGet?" +
                     methodConfig.userNameField + "=" + encodeURIComponent(userName) + "&" +
                     methodConfig.passwordField + "=" + encodeURIComponent(passwordPlain), {
                     method: "get"
                 });
                 break;
             case "post":
-                adFetch = node_fetch_1.default(authURL + "/byPost", {
+                adFetch = fetch(authURL + "/byPost", {
                     method: "post",
                     body: methodConfig.userNameField + "=" + encodeURIComponent(userName) + "&" +
                         methodConfig.passwordField + "=" + encodeURIComponent(passwordPlain)
                 });
                 break;
             case "headers":
-                adFetch = node_fetch_1.default(authURL + "/byHeaders", {
+                adFetch = fetch(authURL + "/byHeaders", {
                     method: "get",
                     headers: {
                         [methodConfig.userNameField]: userName,
@@ -50,16 +37,16 @@ const authenticate = (userName, passwordPlain, adWebAuthConfig) => __awaiter(voi
                 break;
         }
         adFetch
-            .then((res) => __awaiter(void 0, void 0, void 0, function* () {
-            return yield res.json();
-        }))
+            .then(async (response) => {
+            return await response.json();
+        })
             .then((auth) => {
             resolve(auth);
+            return;
         })
-            .catch((err) => {
-            reject(err);
+            .catch((error) => {
+            reject(error);
         });
     });
     return promise;
-});
-exports.authenticate = authenticate;
+};

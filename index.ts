@@ -3,7 +3,7 @@ import fetch, { Response } from "node-fetch";
 import type { ADWebAuthConfig } from "./types";
 
 
-let config: ADWebAuthConfig = null;
+let config: ADWebAuthConfig;
 
 
 export const setConfig = (adWebAuthConfig: ADWebAuthConfig) => {
@@ -58,14 +58,15 @@ export const authenticate = async (userName: string, passwordPlain: string, adWe
     }
 
     adFetch
-      .then(async (res) => {
-        return await res.json();
+      .then(async (response) => {
+        return await response.json();
       })
       .then((auth: boolean) => {
         resolve(auth);
+        return;
       })
-      .catch((err) => {
-        reject(err);
+      .catch((error) => {
+        reject(error);
       });
   });
 
