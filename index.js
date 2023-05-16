@@ -4,49 +4,53 @@ export const setConfig = (adWebAuthConfig) => {
     config = adWebAuthConfig;
 };
 export const authenticate = async (userName, passwordPlain, adWebAuthConfig) => {
-    const promise = new Promise((resolve, reject) => {
+    try {
         const methodConfig = adWebAuthConfig || config;
         let authURL = methodConfig.url;
         if (!authURL.endsWith("/auth")) {
             authURL += "/auth";
         }
-        let adFetch;
+        let response;
         switch (methodConfig.method) {
             case "get":
-                adFetch = fetch(authURL + "/byGet?" +
-                    methodConfig.userNameField + "=" + encodeURIComponent(userName) + "&" +
-                    methodConfig.passwordField + "=" + encodeURIComponent(passwordPlain), {
-                    method: "get"
+                response = await fetch(authURL +
+                    "/byGet?" +
+                    methodConfig.userNameField +
+                    "=" +
+                    encodeURIComponent(userName) +
+                    "&" +
+                    methodConfig.passwordField +
+                    "=" +
+                    encodeURIComponent(passwordPlain), {
+                    method: "get",
                 });
                 break;
             case "post":
-                adFetch = fetch(authURL + "/byPost", {
+                response = await fetch(authURL + "/byPost", {
                     method: "post",
-                    body: methodConfig.userNameField + "=" + encodeURIComponent(userName) + "&" +
-                        methodConfig.passwordField + "=" + encodeURIComponent(passwordPlain)
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        [methodConfig.userNameField]: userName,
+                        [methodConfig.passwordField]: passwordPlain,
+                    }),
                 });
                 break;
             case "headers":
-                adFetch = fetch(authURL + "/byHeaders", {
+                response = await fetch(authURL + "/byHeaders", {
                     method: "get",
                     headers: {
                         [methodConfig.userNameField]: userName,
-                        [methodConfig.passwordField]: passwordPlain
-                    }
+                        [methodConfig.passwordField]: passwordPlain,
+                    },
                 });
                 break;
         }
-        adFetch
-            .then(async (response) => {
-            return await response.json();
-        })
-            .then((auth) => {
-            resolve(auth);
-            return;
-        })
-            .catch((error) => {
-            reject(error);
-        });
-    });
-    return promise;
+        const success = (await response.json());
+        return success;
+    }
+    catch (error) {
+        console.log(error);
+    }
 };

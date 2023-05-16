@@ -1,6 +1,6 @@
 {
   "name": "@cityssm/ad-web-auth-connector",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A connector to assist with authenticating with a cityssm/ad-web-auth instance.",
   "type": "module",
   "exports": "./index.js",
@@ -8,7 +8,7 @@
     "node": "^14.13.1 || >=16.0.0"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "mocha --timeout 30000 --exit"
   },
   "repository": {
     "type": "git",
@@ -21,16 +21,18 @@
   },
   "homepage": "https://github.com/cityssm/ad-web-auth-connector#readme",
   "devDependencies": {
-    "@types/node-fetch": "^2.6.1",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "@typescript-eslint/parser": "^5.22.0",
-    "eslint": "^8.14.0",
-    "eslint-plugin-import": "^2.26.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.1.5",
+    "@types/node-fetch": "^2.6.4",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "eslint": "^8.40.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-unicorn": "^42.0.0"
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-unicorn": "^47.0.0"
   },
   "dependencies": {
-    "node-fetch": "^3.2.4"
+    "node-fetch": "^3.3.1"
   }
 }
