@@ -1,56 +1,60 @@
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 let config;
-export const setConfig = (adWebAuthConfig) => {
+export function setConfig(adWebAuthConfig) {
     config = adWebAuthConfig;
-};
-export const authenticate = async (userName, passwordPlain, adWebAuthConfig) => {
+}
+export async function authenticate(userName, passwordPlain, adWebAuthConfig) {
+    let success = false;
     try {
-        const methodConfig = adWebAuthConfig || config;
+        const methodConfig = adWebAuthConfig !== null && adWebAuthConfig !== void 0 ? adWebAuthConfig : config;
         let authURL = methodConfig.url;
-        if (!authURL.endsWith("/auth")) {
-            authURL += "/auth";
+        if (!authURL.endsWith('/auth')) {
+            authURL += '/auth';
         }
         let response;
         switch (methodConfig.method) {
-            case "get":
+            case 'get': {
                 response = await fetch(authURL +
-                    "/byGet?" +
+                    '/byGet?' +
                     methodConfig.userNameField +
-                    "=" +
+                    '=' +
                     encodeURIComponent(userName) +
-                    "&" +
+                    '&' +
                     methodConfig.passwordField +
-                    "=" +
+                    '=' +
                     encodeURIComponent(passwordPlain), {
-                    method: "get",
+                    method: 'get'
                 });
                 break;
-            case "post":
-                response = await fetch(authURL + "/byPost", {
-                    method: "post",
+            }
+            case 'post': {
+                response = await fetch(authURL + '/byPost', {
+                    method: 'post',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         [methodConfig.userNameField]: userName,
-                        [methodConfig.passwordField]: passwordPlain,
-                    }),
+                        [methodConfig.passwordField]: passwordPlain
+                    })
                 });
                 break;
-            case "headers":
-                response = await fetch(authURL + "/byHeaders", {
-                    method: "get",
+            }
+            case 'headers': {
+                response = await fetch(authURL + '/byHeaders', {
+                    method: 'get',
                     headers: {
                         [methodConfig.userNameField]: userName,
-                        [methodConfig.passwordField]: passwordPlain,
-                    },
+                        [methodConfig.passwordField]: passwordPlain
+                    }
                 });
                 break;
+            }
         }
-        const success = (await response.json());
-        return success;
+        success = (await response.json());
     }
     catch (error) {
         console.log(error);
     }
-};
+    return success;
+}
