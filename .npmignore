@@ -5,10 +5,12 @@ coverage
 node_modules
 test
 
-.atomignore
 .codeclimate.yml
-.eslintrc.js
+.eslintignore
+.eslintrc.json
 .gitignore
 .npmignore
+.prettierignore
+.prettierrc.json
 appveyor.yml
 tsconfig.json
