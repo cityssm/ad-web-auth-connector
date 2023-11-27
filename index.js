@@ -6,7 +6,7 @@ export function setConfig(adWebAuthConfig) {
 export async function authenticate(userName, passwordPlain, adWebAuthConfig) {
     let success = false;
     try {
-        const methodConfig = adWebAuthConfig !== null && adWebAuthConfig !== void 0 ? adWebAuthConfig : config;
+        const methodConfig = adWebAuthConfig ?? config;
         let authURL = methodConfig.url;
         if (!authURL.endsWith('/auth')) {
             authURL += '/auth';
@@ -58,3 +58,7 @@ export async function authenticate(userName, passwordPlain, adWebAuthConfig) {
     }
     return success;
 }
+export default {
+    setConfig,
+    authenticate
+};

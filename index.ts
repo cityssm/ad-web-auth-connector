@@ -80,3 +80,8 @@ export async function authenticate(
 
   return success
 }
+
+export default {
+  setConfig,
+  authenticate
+}
