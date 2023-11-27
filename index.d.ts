@@ -1,8 +1,6 @@
 import type { ADWebAuthConfig } from './types.js';
-export declare function setConfig(adWebAuthConfig: ADWebAuthConfig): void;
-export declare function authenticate(userName: string, passwordPlain: string, adWebAuthConfig?: ADWebAuthConfig): Promise<boolean>;
-declare const _default: {
-    setConfig: typeof setConfig;
-    authenticate: typeof authenticate;
-};
-export default _default;
+export declare class AdWebAuthConnector {
+    #private;
+    constructor(defaultConfig: ADWebAuthConfig);
+    authenticate(userName: string, passwordPlain: string): Promise<boolean>;
+}

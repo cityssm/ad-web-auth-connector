@@ -1,56 +1,52 @@
 import fetch from 'node-fetch';
-let config;
-export function setConfig(adWebAuthConfig) {
-    config = adWebAuthConfig;
-}
-export async function authenticate(userName, passwordPlain, adWebAuthConfig) {
-    let success = false;
-    try {
-        const methodConfig = adWebAuthConfig ?? config;
-        let authURL = methodConfig.url;
-        if (!authURL.endsWith('/auth')) {
-            authURL += '/auth';
+export class AdWebAuthConnector {
+    #config;
+    constructor(defaultConfig) {
+        this.#config = defaultConfig;
+        if (!this.#config.url.endsWith('/auth')) {
+            this.#config.url += '/auth';
         }
-        let response;
-        switch (methodConfig.method) {
-            case 'get': {
-                response = await fetch(`${authURL}/byGet?${methodConfig.userNameField}=${encodeURIComponent(userName)}&${methodConfig.passwordField}=${encodeURIComponent(passwordPlain)}`, {
-                    method: 'get'
-                });
-                break;
+    }
+    async authenticate(userName, passwordPlain) {
+        let success = false;
+        try {
+            let response;
+            switch (this.#config.method) {
+                case 'get': {
+                    response = await fetch(`${this.#config.url}/byGet?${this.#config.userNameField}=${encodeURIComponent(userName)}&${this.#config.passwordField}=${encodeURIComponent(passwordPlain)}`, {
+                        method: 'get'
+                    });
+                    break;
+                }
+                case 'post': {
+                    response = await fetch(`${this.#config.url}/byPost`, {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            [this.#config.userNameField]: userName,
+                            [this.#config.passwordField]: passwordPlain
+                        })
+                    });
+                    break;
+                }
+                case 'headers': {
+                    response = await fetch(`${this.#config.url}/byHeaders`, {
+                        method: 'get',
+                        headers: {
+                            [this.#config.userNameField]: userName,
+                            [this.#config.passwordField]: passwordPlain
+                        }
+                    });
+                    break;
+                }
             }
-            case 'post': {
-                response = await fetch(`${authURL}/byPost`, {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        [methodConfig.userNameField]: userName,
-                        [methodConfig.passwordField]: passwordPlain
-                    })
-                });
-                break;
-            }
-            case 'headers': {
-                response = await fetch(`${authURL}/byHeaders`, {
-                    method: 'get',
-                    headers: {
-                        [methodConfig.userNameField]: userName,
-                        [methodConfig.passwordField]: passwordPlain
-                    }
-                });
-                break;
-            }
+            success = (await response.json());
         }
-        success = (await response.json());
+        catch (error) {
+            console.log(error);
+        }
+        return success;
     }
-    catch (error) {
-        console.log(error);
-    }
-    return success;
 }
-export default {
-    setConfig,
-    authenticate
-};

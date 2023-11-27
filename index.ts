@@ -2,82 +2,74 @@ import fetch, { type Response } from 'node-fetch'
 
 import type { ADWebAuthConfig } from './types.js'
 
-let config: ADWebAuthConfig
+export class AdWebAuthConnector {
+  readonly #config: ADWebAuthConfig
 
-export function setConfig(adWebAuthConfig: ADWebAuthConfig): void {
-  config = adWebAuthConfig
-}
+  constructor(defaultConfig: ADWebAuthConfig) {
+    this.#config = defaultConfig
 
-export async function authenticate(
-  userName: string,
-  passwordPlain: string,
-  adWebAuthConfig?: ADWebAuthConfig
-): Promise<boolean> {
-  let success = false
-
-  try {
-    const methodConfig = adWebAuthConfig ?? config
-
-    let authURL = methodConfig.url
-
-    if (!authURL.endsWith('/auth')) {
-      authURL += '/auth'
+    if (!this.#config.url.endsWith('/auth')) {
+      this.#config.url += '/auth'
     }
-
-    let response: Response
-
-    switch (methodConfig.method) {
-      case 'get': {
-        response = await fetch(
-          `${authURL}/byGet?${methodConfig.userNameField}=${encodeURIComponent(
-            userName
-          )}&${methodConfig.passwordField}=${encodeURIComponent(
-            passwordPlain
-          )}`,
-          {
-            method: 'get'
-          }
-        )
-        break
-      }
-
-      case 'post': {
-        response = await fetch(`${authURL}/byPost`, {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            [methodConfig.userNameField]: userName,
-            [methodConfig.passwordField]: passwordPlain
-          })
-        })
-
-        break
-      }
-
-      case 'headers': {
-        response = await fetch(`${authURL}/byHeaders`, {
-          method: 'get',
-          headers: {
-            [methodConfig.userNameField]: userName,
-            [methodConfig.passwordField]: passwordPlain
-          }
-        })
-
-        break
-      }
-    }
-
-    success = (await response.json()) as boolean
-  } catch (error) {
-    console.log(error)
   }
 
-  return success
-}
+  async authenticate(
+    userName: string,
+    passwordPlain: string
+  ): Promise<boolean> {
+    let success = false
 
-export default {
-  setConfig,
-  authenticate
+    try {
+      let response: Response
+
+      switch (this.#config.method) {
+        case 'get': {
+          response = await fetch(
+            `${this.#config.url}/byGet?${
+              this.#config.userNameField
+            }=${encodeURIComponent(userName)}&${
+              this.#config.passwordField
+            }=${encodeURIComponent(passwordPlain)}`,
+            {
+              method: 'get'
+            }
+          )
+          break
+        }
+
+        case 'post': {
+          response = await fetch(`${this.#config.url}/byPost`, {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              [this.#config.userNameField]: userName,
+              [this.#config.passwordField]: passwordPlain
+            })
+          })
+
+          break
+        }
+
+        case 'headers': {
+          response = await fetch(`${this.#config.url}/byHeaders`, {
+            method: 'get',
+            headers: {
+              [this.#config.userNameField]: userName,
+              [this.#config.passwordField]: passwordPlain
+            }
+          })
+
+          break
+        }
+      }
+
+      success = (await response.json()) as boolean
+    } catch (error) {
+      console.log(error)
+    }
+
+    return success
+  }
 }
