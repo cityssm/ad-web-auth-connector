@@ -1,6 +1,6 @@
 import fetch, { type Response } from 'node-fetch'
 
-import type { ADWebAuthConfig } from './types'
+import type { ADWebAuthConfig } from './types.js'
 
 let config: ADWebAuthConfig
 
@@ -29,15 +29,11 @@ export async function authenticate(
     switch (methodConfig.method) {
       case 'get': {
         response = await fetch(
-          authURL +
-            '/byGet?' +
-            methodConfig.userNameField +
-            '=' +
-            encodeURIComponent(userName) +
-            '&' +
-            methodConfig.passwordField +
-            '=' +
-            encodeURIComponent(passwordPlain),
+          `${authURL}/byGet?${methodConfig.userNameField}=${encodeURIComponent(
+            userName
+          )}&${methodConfig.passwordField}=${encodeURIComponent(
+            passwordPlain
+          )}`,
           {
             method: 'get'
           }
@@ -46,7 +42,7 @@ export async function authenticate(
       }
 
       case 'post': {
-        response = await fetch(authURL + '/byPost', {
+        response = await fetch(`${authURL}/byPost`, {
           method: 'post',
           headers: {
             'Content-Type': 'application/json'
@@ -61,7 +57,7 @@ export async function authenticate(
       }
 
       case 'headers': {
-        response = await fetch(authURL + '/byHeaders', {
+        response = await fetch(`${authURL}/byHeaders`, {
           method: 'get',
           headers: {
             [methodConfig.userNameField]: userName,

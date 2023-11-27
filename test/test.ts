@@ -1,4 +1,4 @@
-import * as assert from 'node:assert'
+import assert from 'node:assert'
 
 import * as adWebAuth from '../index.js'
 
@@ -39,7 +39,7 @@ describe('ad-web-auth-connector', () => {
   it('Fails on invalid credentials', async () => {
     const success = await adWebAuth.authenticate(
       config.testUserSuccess.userName,
-      config.testUserSuccess.password + 'x'
+      `${config.testUserSuccess.password}x`
     )
     assert.ok(!success)
   })
