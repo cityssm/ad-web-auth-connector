@@ -1,61 +1,10 @@
 {
   "root": true,
-  "env": {
-    "es6": true
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": ["./tsconfig.json"],
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2022,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "unicorn"],
-  "extends": [
-    "eslint:recommended",
-    "standard-with-typescript",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "plugin:node/recommended",
-    "plugin:promise/recommended",
-    "plugin:unicorn/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "rules": {
-    "@typescript-eslint/space-before-function-paren": "off",
-    "import/order": [
-      "error",
-      {
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "orderImportKind": "asc"
-        }
-      }
-    ],
-    "node/no-missing-import": "off",
-    "unicorn/consistent-function-scoping": "warn",
-    "unicorn/empty-brace-spaces": "off",
-    "unicorn/prevent-abbreviations": [
-      "error",
-      {
-        "replacements": {
-          "def": {
-            "definition": true
-          },
-          "ele": {
-            "element": true
-          },
-          "eles": {
-            "elements": true
-          },
-          "fns": {
-            "functions": true
-          },
-          "res": {
-            "result": false
-          }
-        }
-      }
-    ]
-  }
+  "extends": ["eslint-config-cityssm"]
 }
