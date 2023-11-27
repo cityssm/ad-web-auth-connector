@@ -12,5 +12,4 @@ test
 .npmignore
 .prettierignore
 .prettierrc.json
-appveyor.yml
 tsconfig.json
