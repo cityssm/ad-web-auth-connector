@@ -1,9 +1,9 @@
-import fetch, { type Response } from 'node-fetch'
-
 import type { ADWebAuthConfig } from './types.js'
 
 export class AdWebAuthConnector {
   readonly #config: ADWebAuthConfig
+
+  readonly #maxRetries = 3
 
   constructor(defaultConfig: ADWebAuthConfig) {
     this.#config = defaultConfig
@@ -13,11 +13,14 @@ export class AdWebAuthConnector {
     }
   }
 
-  async authenticate(
+  async #authenticate(
     userName: string,
-    passwordPlain: string
+    passwordPlain: string,
+    remainingRetries: number
   ): Promise<boolean> {
-    let success = false
+    if (remainingRetries <= 0) {
+      return false
+    }
 
     try {
       let response: Response
@@ -65,11 +68,21 @@ export class AdWebAuthConnector {
         }
       }
 
-      success = (await response.json()) as boolean
+      return (await response.json()) as boolean
     } catch (error) {
       console.log(error)
+      return await this.#authenticate(
+        userName,
+        passwordPlain,
+        remainingRetries - 1
+      )
     }
+  }
 
-    return success
+  async authenticate(
+    userName: string,
+    passwordPlain: string
+  ): Promise<boolean> {
+    return await this.#authenticate(userName, passwordPlain, this.#maxRetries)
   }
 }

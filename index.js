@@ -1,14 +1,16 @@
-import fetch from 'node-fetch';
 export class AdWebAuthConnector {
     #config;
+    #maxRetries = 3;
     constructor(defaultConfig) {
         this.#config = defaultConfig;
         if (!this.#config.url.endsWith('/auth')) {
             this.#config.url += '/auth';
         }
     }
-    async authenticate(userName, passwordPlain) {
-        let success = false;
+    async #authenticate(userName, passwordPlain, remainingRetries) {
+        if (remainingRetries <= 0) {
+            return false;
+        }
         try {
             let response;
             switch (this.#config.method) {
@@ -42,11 +44,14 @@ export class AdWebAuthConnector {
                     break;
                 }
             }
-            success = (await response.json());
+            return (await response.json());
         }
         catch (error) {
             console.log(error);
+            return await this.#authenticate(userName, passwordPlain, remainingRetries - 1);
         }
-        return success;
+    }
+    async authenticate(userName, passwordPlain) {
+        return await this.#authenticate(userName, passwordPlain, this.#maxRetries);
     }
 }

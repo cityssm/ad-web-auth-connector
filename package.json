@@ -8,7 +8,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "test": "mocha --timeout 30000 --exit"
+    "test": "mocha --timeout 120000 --exit"
   },
   "repository": {
     "type": "git",
@@ -22,11 +22,7 @@
   "homepage": "https://github.com/cityssm/ad-web-auth-connector#readme",
   "devDependencies": {
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.10.0",
-    "@types/node-fetch": "^2.6.9",
-    "eslint-config-cityssm": "^1.1.0"
-  },
-  "dependencies": {
-    "node-fetch": "^3.3.2"
+    "@types/node": "^20.10.3",
+    "eslint-config-cityssm": "^1.1.3"
   }
 }
