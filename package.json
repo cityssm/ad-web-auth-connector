@@ -1,6 +1,6 @@
 {
   "name": "@cityssm/ad-web-auth-connector",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A connector to assist with authenticating with a cityssm/ad-web-auth instance.",
   "type": "module",
   "exports": "./index.js",
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/cityssm/ad-web-auth-connector#readme",
   "devDependencies": {
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.10.3",
-    "eslint-config-cityssm": "^1.1.3"
+    "@types/node": "^20.12.4",
+    "eslint-config-cityssm": "^1.6.0"
   }
 }
