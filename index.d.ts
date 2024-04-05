@@ -4,3 +4,4 @@ export declare class AdWebAuthConnector {
     constructor(defaultConfig: ADWebAuthConfig);
     authenticate(userName: string, passwordPlain: string): Promise<boolean>;
 }
+export type { ADWebAuthConfig } from './types.js';

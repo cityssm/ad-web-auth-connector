@@ -86,3 +86,5 @@ export class AdWebAuthConnector {
     return await this.#authenticate(userName, passwordPlain, this.#maxRetries)
   }
 }
+
+export type { ADWebAuthConfig } from './types.js'
