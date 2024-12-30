@@ -3,6 +3,7 @@ import type { ADWebAuthConfig } from './types.js'
 export class AdWebAuthConnector {
   readonly #config: ADWebAuthConfig
 
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   readonly #maxRetries = 3
 
   constructor(defaultConfig: ADWebAuthConfig) {

@@ -7,10 +7,10 @@ test
 
 .codeclimate.yml
 .deepsource.toml
-.eslintignore
 .gitignore
 .npmignore
 .prettierignore
-.prettierrc.json
+
 eslint.config.*
+prettier.config.*
 tsconfig.json

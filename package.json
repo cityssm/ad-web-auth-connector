@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/cityssm/ad-web-auth-connector#readme",
   "devDependencies": {
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.14.1",
-    "eslint-config-cityssm": "^3.2.0"
+    "@types/node": "^22.10.2",
+    "eslint-config-cityssm": "^18.2.0",
+    "prettier-config-cityssm": "^1.0.0"
   }
 }
