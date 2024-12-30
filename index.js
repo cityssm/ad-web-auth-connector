@@ -1,5 +1,6 @@
 export class AdWebAuthConnector {
     #config;
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     #maxRetries = 3;
     constructor(defaultConfig) {
         this.#config = defaultConfig;
@@ -42,6 +43,11 @@ export class AdWebAuthConnector {
                         }
                     });
                     break;
+                }
+                // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+                default: {
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    throw new Error(`Invalid method: ${this.#config.method}`);
                 }
             }
             return (await response.json());
