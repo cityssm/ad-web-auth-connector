@@ -1,6 +1,7 @@
 export interface ADWebAuthConfig {
+  method: 'get' | 'headers' | 'post'
   url: string
-  method: 'get' | 'post' | 'headers'
-  userNameField: string
+
   passwordField: string
+  userNameField: string
 }

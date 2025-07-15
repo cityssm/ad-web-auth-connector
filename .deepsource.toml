@@ -5,6 +5,5 @@ name = "javascript"
 
   [analyzers.meta]
   environment = [
-    "mocha",
     "nodejs"
   ]
