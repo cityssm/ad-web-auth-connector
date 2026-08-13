@@ -66,8 +66,8 @@ export class AdWebAuthConnector {
                     response = await fetch(`${this.#config.url}/byHeaders${debugOutput ? '?debug=true' : ''}`, {
                         method: 'get',
                         headers: {
+                            [this.#config.passwordField]: passwordPlain,
                             [this.#config.userNameField]: username,
-                            [this.#config.passwordField]: passwordPlain
                         }
                     });
                     break;
@@ -79,8 +79,8 @@ export class AdWebAuthConnector {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
+                            [this.#config.passwordField]: passwordPlain,
                             [this.#config.userNameField]: username,
-                            [this.#config.passwordField]: passwordPlain
                         })
                     });
                     break;

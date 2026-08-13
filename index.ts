@@ -117,9 +117,10 @@ export class AdWebAuthConnector {
             `${this.#config.url}/byHeaders${debugOutput ? '?debug=true' : ''}`,
             {
               method: 'get',
+
               headers: {
+                [this.#config.passwordField]: passwordPlain,
                 [this.#config.userNameField]: username,
-                [this.#config.passwordField]: passwordPlain
               }
             }
           )
@@ -132,12 +133,14 @@ export class AdWebAuthConnector {
             `${this.#config.url}/byPost${debugOutput ? '?debug=true' : ''}`,
             {
               method: 'post',
+
               headers: {
                 'Content-Type': 'application/json'
               },
+
               body: JSON.stringify({
+                [this.#config.passwordField]: passwordPlain,
                 [this.#config.userNameField]: username,
-                [this.#config.passwordField]: passwordPlain
               })
             }
           )
