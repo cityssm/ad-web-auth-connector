@@ -16,8 +16,71 @@ export class AdWebAuthConnector {
     }
   }
 
+  /**
+   * Authenticates a user with the provided username and password.
+   * @param username - The user name to authenticate.
+   * @param passwordPlain - The plaintext password of the user.
+   * @returns A promise that resolves to a boolean indicating whether the authentication was successful.
+   */
+  async authenticate(
+    username: string,
+    passwordPlain: string
+  ): Promise<boolean> {
+    const result = await this.#authenticate(
+      username,
+      passwordPlain,
+      this.#maxRetries,
+      false
+    )
+
+    if (typeof result === 'boolean') {
+      return result
+    }
+
+    return result.success
+  }
+
+  /**
+   * Authenticates a user and returns the result with debug information.
+   * ad-web-auth server must be version 0.2.0 or later.
+   * @param username - The user name to authenticate.
+   * @param passwordPlain - The plaintext password of the user.
+   * @returns A promise that resolves to an object containing the authentication result and debug information.
+   */
+  async authenticateDebug(
+    username: string,
+    passwordPlain: string
+  ): Promise<ActiveDirectoryAuthenticateResult> {
+    const result = await this.#authenticate(
+      username,
+      passwordPlain,
+      this.#maxRetries,
+      true
+    )
+
+    if (typeof result === 'boolean') {
+      if (result) {
+        return {
+          success: true,
+
+          bindUserDN: '',
+          sAMAccountName: username
+        } satisfies ActiveDirectoryAuthenticateResult
+      }
+
+      return {
+        success: false,
+
+        bindUserDN: '',
+        errorType: 'AUTHENTICATION_FAILED'
+      } satisfies ActiveDirectoryAuthenticateResult
+    }
+
+    return result
+  }
+
   async #authenticate(
-    userName: string,
+    username: string,
     passwordPlain: string,
     remainingRetries: number,
     debugOutput: boolean
@@ -34,7 +97,7 @@ export class AdWebAuthConnector {
           response = await fetch(
             `${this.#config.url}/byGet?${
               this.#config.userNameField
-            }=${encodeURIComponent(userName)}&${
+            }=${encodeURIComponent(username)}&${
               this.#config.passwordField
             }=${encodeURIComponent(passwordPlain)}${debugOutput ? '&debug=true' : ''}`,
             {
@@ -50,7 +113,7 @@ export class AdWebAuthConnector {
             {
               method: 'get',
               headers: {
-                [this.#config.userNameField]: userName,
+                [this.#config.userNameField]: username,
                 [this.#config.passwordField]: passwordPlain
               }
             }
@@ -68,7 +131,7 @@ export class AdWebAuthConnector {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                [this.#config.userNameField]: userName,
+                [this.#config.userNameField]: username,
                 [this.#config.passwordField]: passwordPlain
               })
             }
@@ -83,56 +146,38 @@ export class AdWebAuthConnector {
         }
       }
 
-      return (await response.json()) as
-        | ActiveDirectoryAuthenticateResult
-        | boolean
+      const result = (await response.json()) as
+        ActiveDirectoryAuthenticateResult | boolean
+
+      if (typeof result === 'boolean' && debugOutput) {
+        if (result) {
+          return {
+            success: true,
+
+            bindUserDN: '',
+            sAMAccountName: username
+          } satisfies ActiveDirectoryAuthenticateResult
+        }
+
+        return {
+          success: false,
+
+          bindUserDN: '',
+          errorType: 'AUTHENTICATION_FAILED'
+        } satisfies ActiveDirectoryAuthenticateResult
+      }
+
+      return result
     } catch (error) {
       console.log(error)
 
       return await this.#authenticate(
-        userName,
+        username,
         passwordPlain,
         remainingRetries - 1,
         debugOutput
       )
     }
-  }
-
-  /**
-   * Authenticates a user with the provided username and password.
-   * @param userName - The username to authenticate.
-   * @param passwordPlain - The plaintext password of the user.
-   * @returns A promise that resolves to a boolean indicating whether the authentication was successful.
-   */
-  async authenticate(
-    userName: string,
-    passwordPlain: string
-  ): Promise<boolean> {
-    return (await this.#authenticate(
-      userName,
-      passwordPlain,
-      this.#maxRetries,
-      false
-    )) as boolean
-  }
-
-  /**
-   * Authenticates a user and returns the result with debug information.
-   * ad-web-auth server must be version 0.2.0 or later.
-   * @param userName - The username to authenticate.
-   * @param passwordPlain - The plaintext password of the user.
-   * @returns A promise that resolves to an object containing the authentication result and debug information.
-   */
-  async authenticateDebug(
-    userName: string,
-    passwordPlain: string
-  ): Promise<ActiveDirectoryAuthenticateResult> {
-    return (await this.#authenticate(
-      userName,
-      passwordPlain,
-      this.#maxRetries,
-      true
-    )) as ActiveDirectoryAuthenticateResult
   }
 }
 
