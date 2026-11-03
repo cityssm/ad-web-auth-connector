@@ -1,6 +1,6 @@
-import Debug from 'debug';
-const DEBUG_NAMESPACE = 'ad-web-auth-connector';
-const debug = Debug(`${DEBUG_NAMESPACE}:index`);
+import { debuglog } from 'node:util';
+export const DEBUG_NAMESPACE = 'ad-web-auth-connector';
+const debug = debuglog(`${DEBUG_NAMESPACE}:index`);
 export class AdWebAuthConnector {
     #config;
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -109,7 +109,7 @@ export class AdWebAuthConnector {
             return result;
         }
         catch (error) {
-            debug(error);
+            debug(JSON.stringify(error, undefined, 2));
             return await this.#authenticate(username, passwordPlain, remainingRetries - 1, debugOutput);
         }
     }

@@ -1,11 +1,12 @@
+import { debuglog } from 'node:util'
+
 import type { ActiveDirectoryAuthenticateResult } from '@cityssm/activedirectory-authenticate'
-import Debug from 'debug'
 
 import type { ADWebAuthConfig } from './types.js'
 
-const DEBUG_NAMESPACE = 'ad-web-auth-connector'
+export const DEBUG_NAMESPACE = 'ad-web-auth-connector'
 
-const debug = Debug(`${DEBUG_NAMESPACE}:index`)
+const debug = debuglog(`${DEBUG_NAMESPACE}:index`)
 
 export class AdWebAuthConnector {
   readonly #config: ADWebAuthConfig
@@ -147,6 +148,7 @@ export class AdWebAuthConnector {
 
           break
         }
+        
         // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
         default: {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -177,7 +179,7 @@ export class AdWebAuthConnector {
 
       return result
     } catch (error) {
-      debug(error)
+      debug(JSON.stringify(error, undefined, 2))
 
       return await this.#authenticate(
         username,

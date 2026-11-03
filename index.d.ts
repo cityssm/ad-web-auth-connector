@@ -1,5 +1,6 @@
 import type { ActiveDirectoryAuthenticateResult } from '@cityssm/activedirectory-authenticate';
 import type { ADWebAuthConfig } from './types.js';
+export declare const DEBUG_NAMESPACE = "ad-web-auth-connector";
 export declare class AdWebAuthConnector {
     #private;
     constructor(defaultConfig: ADWebAuthConfig);
