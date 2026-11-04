@@ -1,6 +1,6 @@
 {
   "name": "@cityssm/ad-web-auth-connector",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A connector to assist with authenticating with a cityssm/ad-web-auth instance.",
   "homepage": "https://github.com/cityssm/ad-web-auth-connector#readme",
   "bugs": {
@@ -26,7 +26,7 @@
     "test": "node --env-file=\".test.env\" --test \"test/test.js\""
   },
   "dependencies": {
-    "@cityssm/activedirectory-authenticate": "^2.0.0"
+    "@cityssm/activedirectory-authenticate": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
